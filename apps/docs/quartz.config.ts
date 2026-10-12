@@ -4,12 +4,12 @@ import * as Plugin from "./quartz/plugins";
 const config: QuartzConfig = {
   configuration: {
     pageTitle: "builder-repo Docs",
-    pageTitleSuffix: " | TIR Labs",
+    pageTitleSuffix: " | Docs",
     enableSPA: true,
     enablePopovers: true,
     analytics: null,
     locale: "en-US",
-    baseUrl: "docs.trytir.com",
+    baseUrl: "docs.domain.com",
     ignorePatterns: ["initial-tests", ".git"],
     defaultDateType: "created",
     theme: {

@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://api.trytir.com/v1",
+      "url": "https://api.domain.com/v1",
       "description": "Production Edge API (Cloudflare CDN)"
     },
     {

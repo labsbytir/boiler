@@ -395,12 +395,12 @@ If `pre-flight-check run` exits with code `1`, you are strictly FORBIDDEN from:
 
 ---
 
-## 13. Employee LLM Token & Message Observability (LiteLLM at gateways.trytir.com & OpenObserve)
+## 13. Employee LLM Token & Message Observability (LiteLLM at subdomain.domain.com & OpenObserve)
 
 For enterprise governance, cost control, and token plan optimization, all AI interactions must route through our internal proxy:
 
 1. **Central AI Gateway Endpoint:**
-   - **Base URL:** `https://gateways.trytir.com/v1`
+   - **Base URL:** `https://subdomain.domain.com/v1`
    - **Infrastructure:** Self-hosted LiteLLM Proxy on Ubuntu 26.04 LTS (port 4000).
    - **Drop-in Compatibility:** 100% OpenAI API compatible; replaces `https://api.openai.com/v1` across all employee setups, ChatGPT Desktop (Codex mode), Cursor, and backend SDKs.
 2. **Model Pool Routing & Allocation:**

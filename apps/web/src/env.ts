@@ -7,7 +7,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   API_BASE_URL: z.string().url().default("http://localhost:3000/api"),
   NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
-  AI_GATEWAY_URL: z.string().url().default("https://gateways.trytir.com/v1"),
+  AI_GATEWAY_URL: z.string().url().default("https://subdomain.domain.com/v1"),
 });
 
 export const env = envSchema.parse({
