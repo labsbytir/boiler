@@ -1,0 +1,6 @@
+gateways.trytir.com {
+    reverse_proxy litellm:4000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+    }
+}

@@ -1,0 +1,28 @@
+model_list:
+  # 1. Xiaomi MiMo (80B Token Pool)
+  - model_name: mimo
+    litellm_params:
+      model: openai/mimo-v1
+      api_base: https://api.mimo.xiaomi.com/v1
+      api_key: os.environ/MIMO_API_KEY
+
+  # 2. Mistral / Codestral
+  - model_name: mistral
+    litellm_params:
+      model: mistral/codestral-latest
+      api_key: os.environ/MISTRAL_API_KEY
+
+  # 3. Grok (xAI)
+  - model_name: grok
+    litellm_params:
+      model: xai/grok-2-latest
+      api_key: os.environ/XAI_API_KEY
+
+  # 4. OpenAI / Fallback
+  - model_name: gpt-4o
+    litellm_params:
+      model: openai/gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+
+litellm_settings:
+  callbacks: ["otel"]

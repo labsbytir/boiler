@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: litellm
+      POSTGRES_USER: litellm_admin
+      POSTGRES_PASSWORD: ${LITELLM_DB_PASSWORD:-ChangeThisStrongPassword123!}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    restart: always
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: "postgresql://litellm_admin:${LITELLM_DB_PASSWORD:-ChangeThisStrongPassword123!}@db:5432/litellm"
+      LITELLM_MASTER_KEY: "${LITELLM_MASTER_KEY:-sk-master-secret-key-for-admin}"
+      LITELLM_OTEL_V2: "true"
+      OTEL_EXPORTER: "otlp_http"
+      OTEL_ENDPOINT: "${OPENOBSERVE_ENDPOINT:-http://openobserve:5080/api/default}"
+      OTEL_HEADERS: "Authorization=Basic ${OPENOBSERVE_TOKEN:-mock_token}"
+    volumes:
+      - ./config.yaml:/app/config.yaml
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    depends_on:
+      - db
+
+  caddy:
+    image: caddy:2-alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - litellm
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:

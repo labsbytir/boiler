@@ -1,0 +1,122 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "builder-repo Headless API",
+    "version": "1.0.0",
+    "description": "Standardized OpenAPI specification for decoupled headless services in builder-repo"
+  },
+  "servers": [
+    {
+      "url": "https://api.trytir.com/v1",
+      "description": "Production Edge API (Cloudflare CDN)"
+    },
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Local Development"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "System Health Check",
+        "description": "Returns operational status across web and headless services",
+        "responses": {
+          "200": {
+            "description": "Healthy response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/session": {
+      "post": {
+        "summary": "Authenticate Session",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "format": "email" }
+                },
+                "required": ["email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error envelope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StandardResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": { "type": "object" },
+          "error": { "type": "null" },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "timestamp": { "type": "string", "format": "date-time" },
+              "requestId": { "type": "string" }
+            }
+          }
+        },
+        "required": ["success", "data", "meta"]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "data": { "type": "null" },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": { "type": "string" },
+              "message": { "type": "string" },
+              "details": { "type": "array", "items": { "type": "object" } }
+            },
+            "required": ["code", "message"]
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "timestamp": { "type": "string", "format": "date-time" }
+            }
+          }
+        },
+        "required": ["success", "error", "meta"]
+      }
+    }
+  }
+}

@@ -20,7 +20,8 @@
     "ponytail": "ponytail",
     "ponytail:review": "ponytail-review",
     "docs:dev": "pnpm --filter docs dev",
-    "docs:build": "pnpm --filter docs build"
+    "docs:build": "pnpm --filter docs build",
+    "mcp": "pnpm --filter @labsbytir/mcp-server dev"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",
