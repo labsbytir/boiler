@@ -3,24 +3,16 @@
 Welcome to [labsbytir/builder-repo](https://github.com/labsbytir/builder-repo).
 
 ## Workflow Rules for Humans and Agents
-1. **Agent Protocol:** All AI coding agents MUST read [AGENTS.md](AGENTS.md).
-2. **Local Pre-Flight Gate:** Always run # Pre-Flight Check — runtime: node
 
-→ [TYPECHECK] npx --no-install tsc --noEmit
-
-### ❌ PRE-FLIGHT FAILURE: TYPECHECK
-**Command Executed:** `npx --no-install tsc --noEmit`
-**Context for AI Fix:**
-
-```
-[41m                                                                               [0m
-[41m[37m                This is not the tsc command you are looking for                [0m
-[41m                                                                               [0m
-
-To get access to the TypeScript compiler, [34mtsc[0m, from the command line either:
-
-- Use [1mnpm install typescript[0m to first add TypeScript to your project [1mbefore[0m using npx
-- Use [1myarn[0m to avoid accidentally running code from un-installed packages
-``` before opening a pull request.
-3. **Commit Standards:** Use Conventional Commits (, , ).
-4. **License:** All contributions are submitted under the Apache License 2.0.
+1. **Pull Request Workflow:** Direct pushes to `main` are protected. All contributions must be submitted via feature branches and Pull Requests.
+2. **Review & Approval:** All Pull Requests require code owner review and approval prior to merge. Review requests are automatically routed according to [`.github/CODEOWNERS`](.github/CODEOWNERS).
+3. **Local Pre-Flight Gate:** Always ensure quality checks pass locally before opening a pull request:
+   ```bash
+   pnpm run check
+   ```
+   This executes TypeScript typechecking, linting, unit tests, and security audits.
+4. **CI Quality Gate:** All Pull Requests must pass the automated GitHub Actions `quality-gate` workflow.
+5. **Conversation Resolution:** All comment threads and review discussions must be resolved prior to merging.
+6. **Commit Standards:** Use Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`, `refactor:`).
+7. **Agent Protocol:** AI coding agents working in this repository MUST consult [`AGENTS.md`](AGENTS.md).
+8. **License:** All contributions are submitted under the Apache License 2.0.
