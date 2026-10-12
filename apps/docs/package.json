@@ -1,0 +1,13 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "quartz build --serve",
+    "build": "quartz build"
+  },
+  "dependencies": {
+    "@jackyzha0/quartz": "^4.4.0"
+  }
+}

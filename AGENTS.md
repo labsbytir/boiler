@@ -81,18 +81,22 @@ labsbytir/builder-repo/
 ├── .pre-flight-check/                  # Deterministic quality gate engine
 │   └── scripts/run-pipeline.py
 ├── apps/
-│   └── web/                            # Next.js 15 (App Router) + React 19 + Tailwind v4
-│       ├── app/
-│       │   ├── api/                    # Headless Route Handlers
-│       │   ├── globals.css             # Tailwind v4 `@import "tailwindcss";`
-│       │   ├── layout.tsx
-│       │   └── page.tsx
-│       ├── components/                 # Isolated UI components (Server Components first)
-│       ├── src/
-│       │   ├── env.ts                  # Type-safe Zod environment validator
-│       │   └── lib/utils.ts            # Shared helpers (cn)
+│   ├── web/                            # Next.js 15 (App Router) + React 19 + Tailwind v4
+│   │   ├── app/                        # Pages, layouts, and route handlers
+│   │   │   ├── api/                    # Headless Route Handlers
+│   │   │   ├── globals.css             # Tailwind v4 `@import "tailwindcss";`
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
+│   │   ├── components/                 # Isolated UI components (Server Components first)
+│   │   ├── src/
+│   │   │   ├── env.ts                  # Type-safe Zod environment validator
+│   │   │   └── lib/utils.ts            # Shared helpers (cn)
+│   │   ├── package.json
+│   │   └── tsconfig.json               # Strict TypeScript
+│   └── docs/                           # Documentation site powered by Quartz v4
+│       ├── content/                    # Markdown documentation files
 │       ├── package.json
-│       └── tsconfig.json               # Strict TypeScript
+│       └── quartz.config.ts
 ├── services/                           # Decoupled headless backend services
 │   ├── api-python/                     # Python 3.12+ (managed via `uv`)
 │   │   ├── pyproject.toml
@@ -137,6 +141,7 @@ You are strictly restricted to the following technologies, toolchains, and versi
 | **Backend (Python)** | Python `3.12+` | `uv` (virtualenvs & sync) |
 | **Backend (PHP)** | PHP `8.3+` | `composer` |
 | **Testing** | Playwright (E2E), Vitest, `pytest`, Pest | `pnpm`, `uv`, `composer` |
+| **Documentation Site** | Quartz `v4.x` (Fast, Markdown-first, static) | `pnpm` / `@jackyzha0/quartz` |
 | **Hosting Targets** | Hybrid: Standard Node.js OR Cloudflare (Pages/Workers/CDN) | `wrangler` |
 
 ### Permitted Micro-Utilities:
@@ -194,6 +199,8 @@ Execute tasks using only these exact commands:
 | **E2E Test** | `pnpm exec playwright test` | — | — |
 | **Quality Gate** | `pre-flight-check run` | `pre-flight-check run` | `pre-flight-check run` |
 | **Review Code** | `pnpm run ponytail:review` | `pnpm run ponytail:review` | `pnpm run ponytail:review` |
+| **Docs Dev** | `pnpm run docs:dev` (Quartz) | — | — |
+| **Docs Build** | `pnpm run docs:build` (Quartz) | — | — |
 
 ---
 
@@ -388,18 +395,19 @@ If `pre-flight-check run` exits with code `1`, you are strictly FORBIDDEN from:
 
 ---
 
-## 13. Employee LLM Token & Message Observability (OpenObserve)
+## 13. Employee LLM Token & Message Observability (Cloudflare AI Gateway & OpenObserve)
 
-For enterprise governance and security, employee AI interactions must be monitored:
+For enterprise governance, cost control, and security, employee AI interactions must be monitored:
 
-1. **Central AI Gateway:** All employee LLM requests (ChatGPT Desktop, Codex, Cursor, web apps) route through a proxy (LiteLLM Proxy or OpenTelemetry collector).
-2. **Logged Metadata:**
-   - Employee ID / API Key identity
-   - Full prompt message transcript & model response
-   - Model name (`gpt-4o`, `claude-3-5-sonnet`)
-   - Token breakdown (`prompt_tokens`, `completion_tokens`, `total_tokens`)
-   - Latency and estimated cost per call
-3. **OpenObserve Integration:** Traces and logs stream to OpenObserve (`OPENOBSERVE_ENDPOINT` in `.env.example`).
+1. **Cloudflare AI Gateway (The Edge Proxy):**
+   - Use Cloudflare AI Gateway as the central proxy: `https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_name}/openai`.
+   - Zero infrastructure required; free core analytics, caching, rate limiting, and fallback routing on Cloudflare.
+   - Drop-in replacement for `https://api.openai.com/v1` across all employee tools (ChatGPT Desktop, Codex, Cursor, Python/TS SDKs).
+2. **Logged Metadata & Employee Tracking:**
+   - Attach employee identity using custom metadata headers: `cf-aig-metadata: {"employee_id": "emp_123", "dept": "engineering"}`.
+   - Captures full prompt transcripts, model completions, model name, status codes, token usage (`prompt_tokens`, `completion_tokens`), latency, and cost per query.
+3. **OpenObserve Integration via Logpush:**
+   - Stream raw AI Gateway logs directly into OpenObserve (`OPENOBSERVE_ENDPOINT`) via Cloudflare Logpush or OpenTelemetry.
    - Self-Hosted Enterprise: Free up to 50 GB/day ingestion (includes SSO, RBAC, PII redaction).
    - Cloud Pay-As-You-Go: $0.50/GB ingestion with unlimited users and 30-day retention included.
 4. **Data Redaction:** PII and secret tokens must be scrubbed before persisting to logs.

@@ -18,7 +18,9 @@
     "check": "pre-flight-check run",
     "doctor": "pre-flight-check doctor",
     "ponytail": "ponytail",
-    "ponytail:review": "ponytail-review"
+    "ponytail:review": "ponytail-review",
+    "docs:dev": "pnpm --filter docs dev",
+    "docs:build": "pnpm --filter docs build"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",
