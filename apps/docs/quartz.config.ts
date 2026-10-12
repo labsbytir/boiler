@@ -1,5 +1,5 @@
-import { QuartzConfig } from "@jackyzha0/quartz/cfg";
-import * as Plugin from "@jackyzha0/quartz/plugins";
+import { QuartzConfig } from "./quartz/cfg";
+import * as Plugin from "./quartz/plugins";
 
 const config: QuartzConfig = {
   configuration: {

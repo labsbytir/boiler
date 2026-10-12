@@ -1,11 +1,17 @@
 #!/bin/sh
 echo "✈️  Running pre-flight-check before push..."
-pre-flight-check run
-STATUS=0
+if command -v pre-flight-check >/dev/null 2>&1; then
+  pre-flight-check run
+  STATUS=$?
+else
+  python3 .pre-flight-check/scripts/run-pipeline.py
+  STATUS=$?
+fi
 
-if [  -ne 0 ]; then
-  echo "
-❌ Pre-flight check failed! Git push has been aborted."
+if [ "$STATUS" -ne 0 ]; then
+  echo "\n❌ Pre-flight check failed! Git push has been aborted."
   echo "Fix the errors above before pushing."
   exit 1
 fi
+
+exit 0

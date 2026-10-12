@@ -101,12 +101,13 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 
 // Handle Tool Execution
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args } = request.params;
+  const { name } = request.params;
+  const args = (request.params.arguments ?? {}) as Record<string, any>;
 
   try {
     switch (name) {
       case "preflight_check": {
-        const cmd = args?.doctor ? "pre-flight-check doctor" : "pre-flight-check run";
+        const cmd = args.doctor ? "pre-flight-check doctor" : "pre-flight-check run";
         try {
           const { stdout, stderr } = await execAsync(cmd, { cwd: REPO_ROOT });
           return {
@@ -130,18 +131,23 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "update_loop_state": {
         const filePath = path.join(REPO_ROOT, "LOOP_STATE.md");
-        const statusEmoji = args.exitCode === 0 ? "✅ Exit 0 (Passed)" : "❌ Exit 1 (Failed)";
-        const logEntry = `\n| ${args.passNumber} | ${args.actionTaken} | \`${args.targetFiles}\` | ${statusEmoji} | Recorded |`;
+        const passNumber = Number(args.passNumber ?? 1);
+        const actionTaken = String(args.actionTaken ?? "Pass executed");
+        const targetFiles = String(args.targetFiles ?? "N/A");
+        const exitCode = Number(args.exitCode ?? 0);
+        const diagnostic = args.diagnostic ? String(args.diagnostic) : null;
+        const statusEmoji = exitCode === 0 ? "✅ Exit 0 (Passed)" : "❌ Exit 1 (Failed)";
+        const logEntry = `\n| ${passNumber} | ${actionTaken} | \`${targetFiles}\` | ${statusEmoji} | Recorded |`;
 
         let current = await fs.readFile(filePath, "utf-8");
         current += logEntry;
-        if (args.diagnostic) {
-          current += `\n\n### Evidence (Pass ${args.passNumber}):\n\`\`\`\n${args.diagnostic}\n\`\`\``;
+        if (diagnostic) {
+          current += `\n\n### Evidence (Pass ${passNumber}):\n\`\`\`\n${diagnostic}\n\`\`\``;
         }
         await fs.writeFile(filePath, current, "utf-8");
 
         return {
-          content: [{ type: "text", text: `LOOP_STATE.md successfully updated for pass ${args.passNumber}.` }],
+          content: [{ type: "text", text: `LOOP_STATE.md successfully updated for pass ${passNumber}.` }],
         };
       }
 
@@ -161,7 +167,7 @@ packages/mcp-server/    - Model Context Protocol server
       }
 
       case "ponytail_audit": {
-        const text = String(args.proposedChanges).toLowerCase();
+        const text = String(args.proposedChanges ?? "").toLowerCase();
         const warnings: string[] = [];
 
         if (text.includes("axios")) warnings.push("VIOLATION: axios is banned. Use native fetch.");
