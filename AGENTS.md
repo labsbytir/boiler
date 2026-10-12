@@ -395,22 +395,27 @@ If `pre-flight-check run` exits with code `1`, you are strictly FORBIDDEN from:
 
 ---
 
-## 13. Employee LLM Token & Message Observability (Cloudflare AI Gateway & OpenObserve)
+## 13. Employee LLM Token & Message Observability (LiteLLM at gateways.trytir.com & OpenObserve)
 
-For enterprise governance, cost control, and security, employee AI interactions must be monitored:
+For enterprise governance, cost control, and token plan optimization, all AI interactions must route through our internal proxy:
 
-1. **Cloudflare AI Gateway (The Edge Proxy):**
-   - Use Cloudflare AI Gateway as the central proxy: `https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_name}/openai`.
-   - Zero infrastructure required; free core analytics, caching, rate limiting, and fallback routing on Cloudflare.
-   - Drop-in replacement for `https://api.openai.com/v1` across all employee tools (ChatGPT Desktop, Codex, Cursor, Python/TS SDKs).
-2. **Logged Metadata & Employee Tracking:**
-   - Attach employee identity using custom metadata headers: `cf-aig-metadata: {"employee_id": "emp_123", "dept": "engineering"}`.
-   - Captures full prompt transcripts, model completions, model name, status codes, token usage (`prompt_tokens`, `completion_tokens`), latency, and cost per query.
-3. **OpenObserve Integration via Logpush:**
-   - Stream raw AI Gateway logs directly into OpenObserve (`OPENOBSERVE_ENDPOINT`) via Cloudflare Logpush or OpenTelemetry.
-   - Self-Hosted Enterprise: Free up to 50 GB/day ingestion (includes SSO, RBAC, PII redaction).
-   - Cloud Pay-As-You-Go: $0.50/GB ingestion with unlimited users and 30-day retention included.
-4. **Data Redaction:** PII and secret tokens must be scrubbed before persisting to logs.
+1. **Central AI Gateway Endpoint:**
+   - **Base URL:** `https://gateways.trytir.com/v1`
+   - **Infrastructure:** Self-hosted LiteLLM Proxy on Ubuntu 26.04 LTS (port 4000).
+   - **Drop-in Compatibility:** 100% OpenAI API compatible; replaces `https://api.openai.com/v1` across all employee setups, ChatGPT Desktop (Codex mode), Cursor, and backend SDKs.
+2. **Model Pool Routing & Allocation:**
+   - `mimo` (Xiaomi MiMo): Primary workhorse for heavy context, bulk repo indexing, and documentation (allocated against our 80B token pool).
+   - `mistral`: Fast code synthesis, unit tests, and Playwright spec generation.
+   - `grok`: Adversarial red-team reviews and complex bug isolation.
+   - `gpt-4o`: Complex multi-file architecture and fallback.
+3. **Employee Identity & Virtual Keys:**
+   - Every employee and tool uses a dedicated virtual API key (e.g., `sk-penelope-...`).
+   - LiteLLM automatically binds each request to `user_id`, tracks monthly budgets, and calculates token consumption.
+4. **OpenObserve Cluster Integration (OTLP):**
+   - LiteLLM runs with `callbacks: ["otel"]` and `LITELLM_OTEL_V2=true`.
+   - Spans and logs stream via OTLP directly into our OpenObserve cluster (`OPENOBSERVE_ENDPOINT`).
+   - Tracks: full prompt transcripts, model completions, `prompt_tokens`, `completion_tokens`, latency, user ID, and cost.
+   - PII and credentials are automatically redacted before storage.
 
 ---
 
