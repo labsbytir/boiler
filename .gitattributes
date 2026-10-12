@@ -1,0 +1,4 @@
+* text=auto eol=lf
+pnpm-lock.yaml linguist-generated=true
+uv.lock linguist-generated=true
+composer.lock linguist-generated=true

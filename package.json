@@ -1,0 +1,27 @@
+{
+  "name": "builder-repo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "High-performance headless web platform built with Next.js 15 and Cloudflare CDN",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/labsbytir/builder-repo.git"
+  },
+  "license": "Apache-2.0",
+  "scripts": {
+    "prepare": "git config core.hooksPath .githooks",
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "lint": "pnpm --filter web lint",
+    "test": "pnpm --filter web test",
+    "test:e2e": "playwright test",
+    "check": "pre-flight-check run",
+    "doctor": "pre-flight-check doctor",
+    "ponytail": "ponytail",
+    "ponytail:review": "ponytail-review"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "typescript": "^5.6.3"
+  }
+}

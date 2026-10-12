@@ -1,0 +1,45 @@
+name: 🐛 Bug Report
+description: Create a report to help us reproduce and fix an issue.
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: "Verify if # Pre-Flight Check — runtime: node
+
+→ [TYPECHECK] npx --no-install tsc --noEmit
+
+### ❌ PRE-FLIGHT FAILURE: TYPECHECK
+**Command Executed:** `npx --no-install tsc --noEmit`
+**Context for AI Fix:**
+
+```
+[41m                                                                               [0m
+[41m[37m                This is not the tsc command you are looking for                [0m
+[41m                                                                               [0m
+
+To get access to the TypeScript compiler, [34mtsc[0m, from the command line either:
+
+- Use [1mnpm install typescript[0m to first add TypeScript to your project [1mbefore[0m using npx
+- Use [1myarn[0m to avoid accidentally running code from un-installed packages
+``` failed or if this is a runtime bug."
+  - type: input
+    id: version
+    attributes:
+      label: Version / Commit Hash
+      placeholder: e.g., v1.0.0 or commit abc1234
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      placeholder: |
+        1. Run command '...'
+        2. See error '...'
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Logs or Pre-Flight Output
+      render: shell

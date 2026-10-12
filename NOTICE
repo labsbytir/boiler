@@ -1,0 +1,10 @@
+builder-repo
+Copyright 2026 TIR Labs (https://github.com/labsbytir)
+
+This product includes software developed by TIR Labs.
+
+Portions of this software incorporate the following third-party components:
+- The-Pre-Flight-Check (MIT License - Copyright 2026 mirekondro)
+- Ponytail (MIT License - Copyright 2026 Dietrich Gebert)
+- Next.js (MIT License - Vercel, Inc.)
+- Tailwind CSS (MIT License - Tailwind Labs Inc.)

@@ -1,0 +1,22 @@
+{
+  "name": "labsbytir/api-php",
+  "description": "Headless decoupled PHP service",
+  "type": "project",
+  "license": "Apache-2.0",
+  "require": {
+    "php": "^8.3"
+  },
+  "require-dev": {
+    "pestphp/pest": "^3.0",
+    "phpstan/phpstan": "^1.12"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\": "src/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  }
+}

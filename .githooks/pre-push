@@ -1,0 +1,11 @@
+#!/bin/sh
+echo "✈️  Running pre-flight-check before push..."
+pre-flight-check run
+STATUS=0
+
+if [  -ne 0 ]; then
+  echo "
+❌ Pre-flight check failed! Git push has been aborted."
+  echo "Fix the errors above before pushing."
+  exit 1
+fi

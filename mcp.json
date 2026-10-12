@@ -1,0 +1,36 @@
+{
+  "": "https://json-schema.org/draft/2020-12/schema",
+  "name": "builder-repo-tools",
+  "version": "1.0.0",
+  "description": "Model Context Protocol manifest for AI tools across labsbytir repositories",
+  "tools": [
+    {
+      "name": "health_check",
+      "description": "Verify availability and status of services",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "service": {
+            "type": "string",
+            "enum": ["web", "api-python", "api-php"],
+            "description": "Target service name"
+          }
+        },
+        "required": ["service"]
+      }
+    },
+    {
+      "name": "execute_quality_gate",
+      "description": "Run the pre-flight check pipeline (Typecheck -> Lint -> Test -> Audit)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "strict": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+    }
+  ]
+}

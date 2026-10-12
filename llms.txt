@@ -1,0 +1,13 @@
+# builder-repo
+
+> Production-grade agentic repository template by TIR Labs.
+
+## Documentation Index
+- [AGENTS.md](AGENTS.md): Master agent instructions, fail-fast quality gate, and loop engineering.
+- [Tool Manifest](mcp.json): Model Context Protocol tool specifications.
+- [Contributing](CONTRIBUTING.md): Human and agent contribution protocols.
+
+## Agent Directives
+- Follow the Ponytail protocol: minimal code, zero slop, reuse existing components.
+- Run ### ⚠️  PRE-FLIGHT SKIPPED: UNKNOWN RUNTIME
+**Context for AI Fix:** No `package.json`, `pyproject.toml`, `requirements.txt`, `go.mod`, or `Cargo.toml` found in current directory. Cannot determine project runtime. before staging or committing any code.

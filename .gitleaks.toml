@@ -1,0 +1,8 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allow environment template examples"
+paths = [
+  "^\.env\.example$"
+]
