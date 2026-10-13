@@ -12,24 +12,17 @@
         "properties": {
           "service": {
             "type": "string",
-            "enum": ["web", "api-python", "api-php"],
+            "enum": [
+              "web",
+              "api-python",
+              "api-php"
+            ],
             "description": "Target service name"
           }
         },
-        "required": ["service"]
-      }
-    },
-    {
-      "name": "execute_quality_gate",
-      "description": "Run the pre-flight check pipeline (Typecheck -> Lint -> Test -> Audit)",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "strict": {
-            "type": "boolean",
-            "default": true
-          }
-        }
+        "required": [
+          "service"
+        ]
       }
     }
   ]
