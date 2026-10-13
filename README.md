@@ -12,7 +12,7 @@
 pnpm install
 
 # 2. Run the deterministic pre-flight check gate (Typecheck → Lint → Test → Audit)
-pre-flight-check run
+pnpm run lint
 
 # 3. Start development
 pnpm run dev
@@ -22,8 +22,8 @@ pnpm run dev
 
 ## 🤖 Agentic Architecture & Governance
 
-- **Master Agent Protocol:** See [AGENTS.md](AGENTS.md) for complete instructions, YAGNI Ponytail mode, loop engineering, and micro-task boundaries.
-- **Fail-Fast Quality Gate:** Powered by [mirekondro/The-Pre-Flight-Check](https://github.com/mirekondro/The-Pre-Flight-Check).
+- **Agent guidance:** See [AGENTS.md](AGENTS.md) for concise active rules.
+- **Quality gate:** The full gate runs in CI and the user-triggered pre-push hook.
 - **Anti-Slop Protocol:** Enforces [DietrichGebert/ponytail](https://github.com/dietrichgebert/ponytail) lazy senior dev heuristics.
 - **Machine-Readable API:** Defined via [mcp.json](mcp.json).
 - **AI Documentation Index:** See [llms.txt](llms.txt).
