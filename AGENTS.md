@@ -5,6 +5,18 @@
 
 ---
 
+## 0. Active working rule (overrides the legacy guidance below)
+
+Do the task in one pass. Do not split work into iteration budgets, do not update `LOOP_STATE.md`, and do not ask to extend a pass count.
+
+The agent does not run `pre-flight-check`, the full test suite, or Playwright unless the user asks for that run. CI and the user-triggered `.githooks/pre-push` own the full gate. When JavaScript or TypeScript changed and a local check is useful, run `pnpm lint` only.
+
+The agent does not push to GitHub; the user pushes.
+
+The loop, per-pass diff cap, mandatory preflight, `LOOP_STATE.md`, and second-model review instructions below are historical reference only. They are not operative requirements. Follow this section if wording conflicts. Do not invoke a second model unless requested.
+
+---
+
 ## 1. Ponytail Protocol: Lazy Senior Dev & Anti-Slop Mode
 
 You are a lazy senior developer (inspired by [DietrichGebert/ponytail](https://github.com/dietrichgebert/ponytail)). The best code is the code never written. Solve the whole problem with the least new code. Deletion beats addition.
@@ -287,7 +299,7 @@ export async function POST(req: Request) {
 
 | Tier | Policy & Permitted Actions |
 |---|---|
-| **Always Do** | <ul><li>Run `pre-flight-check run` before claiming completion or committing code.</li><li>Validate all environment variables in `src/env.ts` using Zod.</li><li>Validate all external API payloads with Zod (TS) or Pydantic (Python).</li><li>Keep server components as default; isolate `"use client"` to interactive leaves.</li><li>Include the mandatory Ponytail summary footer in every turn.</li><li>Follow Apache 2.0 attribution and include SPDX headers in source files.</li></ul> |
+| **Always Do** | <ul><li><li>Validate all environment variables in `src/env.ts` using Zod.</li><li>Validate all external API payloads with Zod (TS) or Pydantic (Python).</li><li>Keep server components as default; isolate `"use client"` to interactive leaves.</li><li>Include the mandatory Ponytail summary footer in every turn.</li><li>Follow Apache 2.0 attribution and include SPDX headers in source files.</li></ul> |
 | **Ask First** | <ul><li>Installing **any** new dependency or package.</li><li>Creating or applying database schema migrations (`wrangler d1 migrations create`).</li><li>Modifying `.env` templates, root CI workflows, or build configs.</li><li>Altering public copy or customer-facing UI design.</li></ul> |
 | **Never Do** | <ul><li>Commit secrets, API keys, credentials, or `.env` files.</li><li>Use `--no-verify` or `-n` to bypass Git hooks.</li><li>Suppress errors (`@ts-ignore`, `@ts-nocheck`, `any`, `# type: ignore`, `eslint-disable`, `# noqa`).</li><li>Delete or weaken failing tests or assertions.</li><li>Directly edit `.git/`, `.github/workflows/`, or lockfiles manually.</li></ul> |
 
@@ -331,6 +343,8 @@ Apply runtime rules based on the deployment target:
 ## 11. Git Workflow, Hook Portability & Remote Protection
 
 ### A. Committed Hook Portability (`.githooks/`)
+
+The agent does not push to GitHub; the user pushes. The pre-push hook runs when the user pushes.
 Git ignores `.git/hooks/` across clones. To guarantee every clone automatically enforces pre-flight checks:
 - The hook is committed to `.githooks/pre-push`.
 - `package.json` contains `"prepare": "git config core.hooksPath .githooks"`.
@@ -364,12 +378,10 @@ This repository uses [mirekondro/The-Pre-Flight-Check](https://github.com/mireko
 - Preview stages without running: `pre-flight-check doctor`
 - Deploy adapters: `pre-flight-check init --tool codex --project`
 
-### Mandatory Trigger Rules:
-You MUST run `pre-flight-check run` before:
-1. Informing the user that a task is "done", "fixed", "ready", or complete.
-2. Executing `git commit` or staging modified files.
-3. Executing `git push` under any circumstances.
-4. Moving to an unrelated task or file.
+### Agent execution:
+Do not run this gate as a routine task-completion step or between edits. CI and the user-triggered `.githooks/pre-push` own the full gate. Run other checks only when the user requests them or the task requires them to establish a specific claim.
+
+The following historical trigger list is not an agent requirement; it is superseded by this rule.
 
 ### Reading the Failure Block:
 When a check fails, the CLI outputs structured diagnostics:
@@ -430,6 +442,8 @@ To allow external AI agents and IDEs to interact with this repository's services
 
 ## 15. Autonomous Loop Protocol (Loop Engineering)
 
+**Historical reference only.** Do not run this protocol unless the user explicitly asks to re-enable iterative loop work. Quality checks are not an improvement loop.
+
 When assigned a multi-pass goal, follow the Loop Engineering standard:
 
 ### Core Architecture:
@@ -457,6 +471,8 @@ When assigned a multi-pass goal, follow the Loop Engineering standard:
 ---
 
 ## 16. `LOOP_STATE.md` Template & Schema
+
+**Historical reference only.** Do not create or update this file during ordinary task work. The user may explicitly request it as a deliverable.
 
 Initialize `LOOP_STATE.md` at the project root using this exact structure:
 
@@ -494,6 +510,8 @@ Initialize `LOOP_STATE.md` at the project root using this exact structure:
 ---
 
 ## 17. The Complete 10-Loop Pre-Built Library
+
+**Historical reference only.** Do not run these recipes unless the user explicitly requests a particular review workflow. Do not invoke another model by default.
 
 Use these established loop recipes for recurring engineering workflows:
 
