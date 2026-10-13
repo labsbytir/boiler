@@ -7,13 +7,6 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { exec } from "child_process";
-import { promisify } from "util";
-import fs from "fs/promises";
-import path from "path";
-
-const execAsync = promisify(exec);
-const REPO_ROOT = process.env.REPO_ROOT || process.cwd();
 
 const server = new Server(
   {
@@ -31,46 +24,6 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
-      {
-        name: "preflight_check",
-        description:
-          "Runs the deterministic 4-stage quality gate (Typecheck → Lint → Test → Audit). Halts on first failure.",
-        inputSchema: {
-          type: "object",
-          properties: {
-            doctor: {
-              type: "boolean",
-              description: "If true, previews the plan without executing.",
-              default: false,
-            },
-          },
-        },
-      },
-      {
-        name: "get_loop_state",
-        description: "Reads the current contents and status from LOOP_STATE.md.",
-        inputSchema: {
-          type: "object",
-          properties: {},
-        },
-      },
-      {
-        name: "update_loop_state",
-        description:
-          "Records a completed bounded action, exit code, and next step in LOOP_STATE.md.",
-        inputSchema: {
-          type: "object",
-          properties: {
-            passNumber: { type: "number", description: "Current iteration pass number" },
-            actionTaken: { type: "string", description: "Summary of single bounded change" },
-            targetFiles: { type: "string", description: "Path to modified files" },
-            exitCode: { type: "number", description: "0 for pass, 1 for fail" },
-            nextStep: { type: "string", description: "Next immediate subtask" },
-            diagnostic: { type: "string", description: "Optional diagnostic error snippet" },
-          },
-          required: ["passNumber", "actionTaken", "targetFiles", "exitCode", "nextStep"],
-        },
-      },
       {
         name: "get_repo_map",
         description:
@@ -106,51 +59,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
   try {
     switch (name) {
-      case "preflight_check": {
-        const cmd = args.doctor ? "pre-flight-check doctor" : "pre-flight-check run";
-        try {
-          const { stdout, stderr } = await execAsync(cmd, { cwd: REPO_ROOT });
-          return {
-            content: [{ type: "text", text: stdout || stderr || "Quality gate passed cleanly." }],
-          };
-        } catch (error: any) {
-          return {
-            isError: true,
-            content: [{ type: "text", text: error.stdout || error.stderr || error.message }],
-          };
-        }
-      }
-
-      case "get_loop_state": {
-        const filePath = path.join(REPO_ROOT, "LOOP_STATE.md");
-        const content = await fs.readFile(filePath, "utf-8");
-        return {
-          content: [{ type: "text", text: content }],
-        };
-      }
-
-      case "update_loop_state": {
-        const filePath = path.join(REPO_ROOT, "LOOP_STATE.md");
-        const passNumber = Number(args.passNumber ?? 1);
-        const actionTaken = String(args.actionTaken ?? "Pass executed");
-        const targetFiles = String(args.targetFiles ?? "N/A");
-        const exitCode = Number(args.exitCode ?? 0);
-        const diagnostic = args.diagnostic ? String(args.diagnostic) : null;
-        const statusEmoji = exitCode === 0 ? "✅ Exit 0 (Passed)" : "❌ Exit 1 (Failed)";
-        const logEntry = `\n| ${passNumber} | ${actionTaken} | \`${targetFiles}\` | ${statusEmoji} | Recorded |`;
-
-        let current = await fs.readFile(filePath, "utf-8");
-        current += logEntry;
-        if (diagnostic) {
-          current += `\n\n### Evidence (Pass ${passNumber}):\n\`\`\`\n${diagnostic}\n\`\`\``;
-        }
-        await fs.writeFile(filePath, current, "utf-8");
-
-        return {
-          content: [{ type: "text", text: `LOOP_STATE.md successfully updated for pass ${passNumber}.` }],
-        };
-      }
-
       case "get_repo_map": {
         const map = `
 apps/web/               - Next.js 15 (App Router), React 19, Tailwind CSS v4
