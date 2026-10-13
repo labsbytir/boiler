@@ -154,7 +154,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case "get_repo_map": {
         const map = `
 apps/web/               - Next.js 15 (App Router), React 19, Tailwind CSS v4
-apps/docs/              - Quartz v4 static documentation site
 services/api-python/    - Python 3.12 headless service (uv)
 services/api-php/       - PHP 8.3 headless service (composer)
 tests/e2e/              - Playwright E2E test specs
