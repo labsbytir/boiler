@@ -93,10 +93,6 @@ labsbytir/builder-repo/
 │   │   │   └── lib/utils.ts            # Shared helpers (cn)
 │   │   ├── package.json
 │   │   └── tsconfig.json               # Strict TypeScript
-│   └── docs/                           # Documentation site powered by Quartz v4
-│       ├── content/                    # Markdown documentation files
-│       ├── package.json
-│       └── quartz.config.ts
 ├── services/                           # Decoupled headless backend services
 │   ├── api-python/                     # Python 3.12+ (managed via `uv`)
 │   │   ├── pyproject.toml
@@ -141,7 +137,6 @@ You are strictly restricted to the following technologies, toolchains, and versi
 | **Backend (Python)** | Python `3.12+` | `uv` (virtualenvs & sync) |
 | **Backend (PHP)** | PHP `8.3+` | `composer` |
 | **Testing** | Playwright (E2E), Vitest, `pytest`, Pest | `pnpm`, `uv`, `composer` |
-| **Documentation Site** | Quartz `v4.x` (Fast, Markdown-first, static) | `pnpm` / `@jackyzha0/quartz` |
 | **Hosting Targets** | Hybrid: Standard Node.js OR Cloudflare (Pages/Workers/CDN) | `wrangler` |
 
 ### Permitted Micro-Utilities:
@@ -199,8 +194,6 @@ Execute tasks using only these exact commands:
 | **E2E Test** | `pnpm exec playwright test` | — | — |
 | **Quality Gate** | `pre-flight-check run` | `pre-flight-check run` | `pre-flight-check run` |
 | **Review Code** | `pnpm run ponytail:review` | `pnpm run ponytail:review` | `pnpm run ponytail:review` |
-| **Docs Dev** | `pnpm run docs:dev` (Quartz) | — | — |
-| **Docs Build** | `pnpm run docs:build` (Quartz) | — | — |
 
 ---
 
